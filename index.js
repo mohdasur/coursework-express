@@ -67,6 +67,31 @@ app.get('/lessons', async (req, res) => {
     }
 });
 
+app.put('/lesson/:id', async (req, res) => {
+    const updateFields = req.body;
+
+    if (Object.keys(updateFields).length === 0) {
+        res.status(400).json({ message: "No fields to update" });
+        return;
+    }
+
+    try {
+        console.log(Number(req.params.id))
+        const db = getDB();
+        const result = await db.collection('Lessons').updateOne(
+            { id: Number(req.params.id) },
+            { $set: updateFields }
+        );
+        if (result.matchedCount === 0) {
+            res.status(404).json({ message: "Lesson not found" });
+        } else {
+            res.json(result);
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Failed to update lesson", error });
+    }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
