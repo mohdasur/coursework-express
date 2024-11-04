@@ -31,7 +31,16 @@ app.use((req, res, next) => {
     next();
 });
 
-
+app.post('/order', async (req, res) => {
+    try {
+        const db = getDB();
+        const order = req.body;
+        const result = await db.collection("Orders").insertOne(order);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({message: "failed to insert orders", error})
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
