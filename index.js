@@ -42,6 +42,31 @@ app.post('/order', async (req, res) => {
     }
 });
 
+app.get('/lessons', async (req, res) => {
+    try {
+        if (req.query.search) {
+            const db = getDB();
+            const lessons = await db.collection('Lessons').find({
+                $or: [
+                    { Subject: { $regex: req.query.search, $options: 'i' } },
+                    { Location: { $regex: req.query.search, $options: 'i' } },
+                    { Price: { $regex: req.query.search, $options: 'i' } },
+                    { Spaces: { $regex: new RegExp(`^${req.query.search}$`, 'i') } }
+                ]
+            }).toArray();
+            res.json(lessons);
+        }
+        else{
+
+            const db = getDB();
+            const lessons = await db.collection('Lessons').find().toArray();
+            res.json(lessons);
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch lessons", error });
+    }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
