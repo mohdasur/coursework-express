@@ -38,7 +38,7 @@ app.post('/order', async (req, res) => {
         const result = await db.collection("Orders").insertOne(order);
         res.json(result);
     } catch (error) {
-        res.status(500).json({message: "failed to insert orders", error})
+        res.status(500).json({ message: 'Failed to create order' });
     }
 });
 
