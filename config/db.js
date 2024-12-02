@@ -1,14 +1,17 @@
-const { MongoClient } = require('mongodb');
-const dotenv = require('dotenv');
+const { MongoClient } = require("mongodb");
+const dotenv = require("dotenv");
 dotenv.config();
 
 let db;
 
 const connectDB = async () => {
   try {
-    const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     await client.connect();
-    db = client.db('coursework');
+    db = client.db("coursework");
     console.log("Connected to MongoDB Atlas");
   } catch (error) {
     console.error("Error connecting to MongoDB", error);
